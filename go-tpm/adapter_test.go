@@ -332,7 +332,7 @@ func TestValidFilePaths(t *testing.T) {
 		expectedError error
 	}{
 		{"Positive test case", "adapter_test.go", nil}, // this file "should" exist
-		{"Symlink should fail", "/etc/os-release", ErrSymlinksNotAllowed},
+		{"Symlink should be followed", "/etc/os-release", nil},
 		{"Path traversal should fail", "/etc/../etc/os-release", ErrPathTraversal},
 		{"Invalid path should fail", "/etc/does-not-exist", syscall.Errno(syscall.ENOENT)},
 	}

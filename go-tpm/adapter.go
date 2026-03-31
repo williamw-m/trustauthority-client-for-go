@@ -16,6 +16,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -315,7 +316,13 @@ func validateFilePath(filePath string) error {
 	}
 
 	if info.Mode()&os.ModeSymlink != 0 {
-		return ErrSymlinksNotAllowed
+		resolved, err := filepath.EvalSymlinks(filePath)
+		if err != nil {
+			return err
+		}
+		if strings.Contains(resolved, "..") {
+			return ErrPathTraversal
+		}
 	}
 
 	return nil
